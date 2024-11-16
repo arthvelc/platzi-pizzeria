@@ -2,13 +2,20 @@ package com.platzi.pizza.persistence.entity;
 
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name="pizza_order")
+@Getter
+@Setter
+@NoArgsConstructor
 public class OrderEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,4 +36,11 @@ public class OrderEntity {
 
     @Column(name="additional_notes", length = 200)
     private String additionalNotes;
+
+    @OneToMany(mappedBy = "order")
+    private List<OrderItemEntity> orderItem;
+
+    @OneToOne
+    @JoinColumn(name = "id_customer", referencedColumnName = "id_customer", insertable = false, updatable = false)
+    private CustomerEntity customer;
 }
