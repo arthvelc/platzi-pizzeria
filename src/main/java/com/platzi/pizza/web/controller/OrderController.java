@@ -2,12 +2,12 @@ package com.platzi.pizza.web.controller;
 
 import com.platzi.pizza.persistence.entity.OrderEntity;
 import com.platzi.pizza.service.OrderService;
+import org.hibernate.query.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.sql.Struct;
 import java.util.List;
 
 @RestController
@@ -24,4 +24,26 @@ public class OrderController {
     public ResponseEntity<List<OrderEntity>> getAll(){
         return ResponseEntity.ok(orderService.getAll());
     }
+
+    @GetMapping("/today")
+    public ResponseEntity<List<OrderEntity>> getTodayOrders(){
+        return ResponseEntity.ok(orderService.getTodayOrders());
+    }
+
+    @GetMapping("/outside")
+    public ResponseEntity<List<OrderEntity>> getOutSideOrders(){
+        return ResponseEntity.ok(orderService.getOutsideOrders());
+    }
+
+    @GetMapping("/customer/{idCustomer}")
+    public ResponseEntity<List<OrderEntity>> getCustomerOrders(@PathVariable String idCustomer){
+        return ResponseEntity.ok(orderService.getCustomerOrders(idCustomer));
+    }
+
+    @PostMapping
+    public ResponseEntity<OrderEntity> save(@RequestBody OrderEntity order){
+        return ResponseEntity.ok(orderService.save(order));
+    }
+
+
 }

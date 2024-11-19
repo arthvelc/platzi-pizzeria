@@ -3,9 +3,11 @@ package com.platzi.pizza.web.controller;
 import com.platzi.pizza.persistence.entity.PizzaEntity;
 import com.platzi.pizza.service.PizzaService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.awt.print.Pageable;
 import java.util.List;
 
 // Indica que esta clase es un controlador REST que maneja las solicitudes relacionadas con las pizzas.
@@ -27,8 +29,9 @@ public class PizzaController {
      * @return Lista de todas las pizzas almacenadas.
      */
     @GetMapping
-    public ResponseEntity<List<PizzaEntity>> getAll(){
-        return ResponseEntity.ok(this.pizzaService.getAll());
+    public ResponseEntity<Page<PizzaEntity>> getAll(@RequestParam(defaultValue = "0") int page,
+                                                    @RequestParam(defaultValue = "5") int elements){
+        return ResponseEntity.ok(this.pizzaService.getAll(page, elements));
     }
 
     /**
@@ -36,8 +39,11 @@ public class PizzaController {
      * @return Lista de pizzas disponibles.
      */
     @GetMapping("/available")
-    public ResponseEntity<List<PizzaEntity>> getAvailable(){
-        return ResponseEntity.ok(pizzaService.getAvailable());
+    public ResponseEntity<Page<PizzaEntity>> getAvailable(@RequestParam(defaultValue = "0") int page,
+                                                          @RequestParam(defaultValue = "2") int elements,
+                                                          @RequestParam(defaultValue = "price") String sortBy,
+                                                          @RequestParam(defaultValue = "ASC") String sortDirection){
+        return ResponseEntity.ok(pizzaService.getAvailable(page, elements, sortBy, sortDirection));
     }
 
         /**
@@ -66,15 +72,28 @@ public class PizzaController {
         return ResponseEntity.ok(pizzaService.get(idPizza));
     }
 
+    @GetMapping("/vegan")
+    public int countVegan(){
+        return pizzaService.countVegan();
+    }
+
     /**
      * Endpoint para obtener una pizza disponible por su nombre (ignora mayúsculas y minúsculas).
      * @param name Nombre de la pizza a buscar.
      * @return La entidad de la pizza encontrada.
      */
     @GetMapping("/name/{name}")
-    public ResponseEntity<PizzaEntity> getByName(@PathVariable String name){
-        return ResponseEntity.ok(pizzaService.getByPizzaName(name));
+    public ResponseEntity<PizzaEntity> getByName(@PathVariable String name) {
+        return pizzaService.getByPizzaName(name)
+                .map(ResponseEntity::ok) // Si el valor existe, se devuelve con 200 OK
+                .orElse(ResponseEntity.badRequest().build()); // Si no existe, devuelve 400 Bad Request
     }
+
+    @GetMapping("/cheapest/{price}")
+    public ResponseEntity<List<PizzaEntity>> getCheapest(@PathVariable Double price){
+        return ResponseEntity.ok(pizzaService.getCheapest(price));
+    }
+
 
     /**
      * Endpoint para agregar una nueva pizza.
