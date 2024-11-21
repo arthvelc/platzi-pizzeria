@@ -3,6 +3,8 @@ package com.platzi.pizza.service;
 import com.platzi.pizza.persistence.entity.PizzaEntity;
 import com.platzi.pizza.persistence.repository.PizzaPageSortRepository;
 import com.platzi.pizza.persistence.repository.PizzaRepository;
+import com.platzi.pizza.service.dto.UpdatePizzaPriceDto;
+import jakarta.transaction.Transactional;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -115,5 +117,10 @@ public class PizzaService {
         if(this.exist(idPizza)){
             pizzaRepository.deleteById(idPizza);
         }
+    }
+
+    @Transactional
+    public void updatePrice (UpdatePizzaPriceDto dto){
+        pizzaRepository.updatePrice(dto);
     }
 }

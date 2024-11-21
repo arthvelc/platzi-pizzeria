@@ -1,6 +1,7 @@
 package com.platzi.pizza.service;
 
 import com.platzi.pizza.persistence.entity.OrderEntity;
+import com.platzi.pizza.persistence.projection.OrderSumary;
 import com.platzi.pizza.persistence.repository.OrderRepository;
 import com.sun.jdi.connect.AttachingConnector;
 import lombok.Getter;
@@ -51,6 +52,10 @@ public class OrderService {
 
     public List<OrderEntity> getCustomerOrders(String idCustomer){
         return orderRepository.findCustomerOrders(idCustomer);
+    }
+
+    public OrderSumary getSummary(int orderId){
+        return orderRepository.findSummary(orderId);
     }
 
 }

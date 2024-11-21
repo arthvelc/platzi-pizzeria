@@ -1,6 +1,7 @@
 package com.platzi.pizza.web.controller;
 
 import com.platzi.pizza.persistence.entity.OrderEntity;
+import com.platzi.pizza.persistence.projection.OrderSumary;
 import com.platzi.pizza.service.OrderService;
 import org.hibernate.query.Order;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,11 @@ public class OrderController {
     @PostMapping
     public ResponseEntity<OrderEntity> save(@RequestBody OrderEntity order){
         return ResponseEntity.ok(orderService.save(order));
+    }
+
+    @GetMapping("/summary/{id}")
+    public ResponseEntity<OrderSumary> getOutSideOrders(@PathVariable int id){
+        return ResponseEntity.ok(orderService.getSummary(id));
     }
 
 

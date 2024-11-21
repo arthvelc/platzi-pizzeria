@@ -1,8 +1,12 @@
 package com.platzi.pizza.persistence.repository;
 
 import com.platzi.pizza.persistence.entity.PizzaEntity;
+import com.platzi.pizza.service.dto.UpdatePizzaPriceDto;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.ListCrudRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -27,4 +31,11 @@ public interface PizzaRepository extends ListCrudRepository<PizzaEntity, Integer
 
     //ahora vamos a buscar el top 3 de las pizzas más baratas
     List<PizzaEntity> findTop3ByAvailableTrueAndPriceLessThanEqualOrderByPriceAsc(Double price);
+
+    @Query(value =
+            "UPDATE pizza " +
+            "SET price = :#{#newPizzaPrice.newPrice} " +
+            "WHERE id_pizza = :#{#newPizzaPrice.pizzaId} ", nativeQuery = true)
+    @Modifying
+    void updatePrice (@Param("newPizzaPrice")UpdatePizzaPriceDto newPizzaPrice);
 }
