@@ -109,7 +109,7 @@ public class PizzaService {
         return pizzaRepository.existsById(idPizza);
     }
 
-    /**
+    /** 
      * Elimina una pizza de la base de datos si existe.
      * @param idPizza ID de la pizza a eliminar.
      */
